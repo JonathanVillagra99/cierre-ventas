@@ -1,0 +1,297 @@
+:root {
+    --primary: #2e7d32;
+    --primary-dark: #1b5e20;
+    --bg-color: #f4f7f6;
+    --text-color: #333;
+    --card-bg: #fff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding-bottom: 2rem;
+}
+
+.tabs {
+    display: flex;
+    background-color: var(--primary);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 1rem;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.tab-btn.active {
+    background-color: var(--primary-dark);
+    font-weight: bold;
+    border-bottom: 4px solid #ffeb3b;
+}
+
+main {
+    padding: 1.5rem;
+    max-width: 600px;
+    margin: auto;
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    margin-bottom: 1.2rem;
+    color: var(--primary-dark);
+}
+
+.sub-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+}
+
+.sub-tab-btn {
+    flex: 1;
+    padding: 0.8rem;
+    background-color: #e0e0e0;
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sub-tab-btn.active {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* Panel de Caja */
+.caja-panel {
+    background: var(--card-bg);
+    border: 2px solid var(--primary);
+    border-radius: 10px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.caja-panel h3 {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 0.3rem;
+}
+
+.monto-caja {
+    color: var(--primary);
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin-bottom: 0.8rem;
+}
+
+.ajuste-caja {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-top: 1px dashed #ccc;
+    padding-top: 0.8rem;
+}
+
+.btn-group-caja {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-caja {
+    flex: 1;
+    padding: 0.7rem;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-inyectar {
+    background-color: #2e7d32;
+}
+
+.btn-fijar {
+    background-color: #757575;
+}
+
+/* Formularios */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: bold;
+    color: #555;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #fff;
+}
+
+fieldset {
+    border: 1.5px solid #c8e6c9;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: var(--card-bg);
+}
+
+legend {
+    font-weight: bold;
+    padding: 0 0.5rem;
+    color: var(--primary);
+}
+
+button {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    margin-top: 1rem;
+}
+
+.btn-excel {
+    background-color: #107c41;
+    color: white;
+    margin-top: 1rem;
+}
+
+/* Dashboard */
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 1.2rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.card.full-width {
+    grid-column: 1 / -1;
+}
+
+.card h3 {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.4rem;
+}
+
+.card p {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--primary-dark);
+}
+
+.card.mini {
+    padding: 0.9rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.card.mini span {
+    display: block;
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-top: 0.3rem;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed #ccc;
+    margin: 2rem 0;
+}
+
+/* --- Estilos para Validación de PIN y Seguridad --- */
+.pin-card {
+    background: var(--card-bg);
+    border: 2px solid var(--primary-dark);
+    border-radius: 10px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.pin-card h2 {
+    margin-bottom: 0.8rem;
+}
+
+.pin-card p {
+    color: #666;
+    margin-bottom: 1.2rem;
+    font-size: 0.95rem;
+}
+
+.pin-msg {
+    margin-top: 1rem;
+    font-weight: bold;
+    font-size: 0.95rem;
+    min-height: 1.2rem;
+}
+
+.pin-msg.error {
+    color: #d32f2f;
+}
+
+.pin-msg.blocked {
+    color: #c62828;
+    background-color: #ffebee;
+    padding: 0.8rem;
+    border-radius: 6px;
+    border: 1px solid #ffcdd2;
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Cierre de Ventas Diario",
+  "short_name": "Cierres",
+  "description": "Aplicación para el registro y reporte de cierres de caja diarios",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4f7f6",
+  "theme_color": "#2e7d32",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1183/1183204.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
