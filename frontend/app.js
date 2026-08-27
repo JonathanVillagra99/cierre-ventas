@@ -1,5 +1,5 @@
 // URL de la API de FastAPI
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://api-cierre-ventas.onrender.com";
 
 // Configuración de Seguridad (PIN)
 const PIN_CORRECTO = "1234";
