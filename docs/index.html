@@ -3,127 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Cierre de Caja</title>
+    <title>Cierre de Ventas</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Librería SheetJS para exportar a Excel -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2e7d32">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
+    <nav class="tabs">
+        <button class="tab-btn active" onclick="switchTab('registro', this)">📝 Registro</button>
+        <button class="tab-btn" onclick="switchTab('reportes', this)">📊 Reportes</button>
+    </nav>
 
-    <div class="app-container">
-        <!-- Navegación principal -->
-        <header class="app-header">
-            <h1>Control de Caja Diario</h1>
-            <nav class="tabs-nav">
-                <button class="tab-btn active" onclick="switchTab('tab-registro', this)">Registro Diario</button>
-                <button class="tab-btn" onclick="switchTab('tab-reportes', this)">Reportes y Excel</button>
-            </nav>
-        </header>
+    <main>
+        <!-- PESTAÑA DE REGISTRO -->
+        <section id="registro" class="tab-content active">
+            
+            <div class="sub-tabs">
+                <button type="button" class="sub-tab-btn active" onclick="cambiarSucursalRegistro('Santa Barbara', this)">Santa Barbara</button>
+                <button type="button" class="sub-tab-btn" onclick="cambiarSucursalRegistro('Ralco', this)">Ralco</button>
+            </div>
 
-        <!-- Pestaña 1: Registro de Cierre -->
-        <section id="tab-registro" class="tab-content active">
-            <form id="formCierre" class="cierre-form">
-                <h2>Nuevo Cierre de Turno</h2>
+            <!-- Muestra el último saldo conocido de esa sucursal -->
+            <div class="caja-panel">
+                <h3>Último Saldo Registrado - <span id="lbl-caja-sucursal">Santa Barbara</span></h3>
+                <p id="res-saldo-registro" class="monto-caja">$0</p>
+            </div>
 
+            <h2>Cierre Diario de Caja</h2>
+            <form id="ventaForm">
                 <div class="form-group">
-                    <label for="fecha">Fecha del Cierre:</label>
+                    <label for="fecha">Fecha:</label>
                     <input type="date" id="fecha" required>
                 </div>
-
+                
                 <div class="form-group">
-                    <label for="sucursal">Sucursal:</label>
-                    <select id="sucursal" required>
-                        <option value="Santa Barbara">Santa Bárbara</option>
-                        <option value="Ralco">Ralco</option>
+                    <label for="empleado">Cierre a cargo de:</label>
+                    <select id="empleado" required>
+                        <option value="Rosa Pinaleo">Rosa Piñaleo</option>
+                        <option value="Daniel Suarez">Daniel Suarez</option>
+                        <option value="Molka Poblete">Molka Poblete</option>
+                        <option value="Administracion">Administracion</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="empleado">Empleado que entrega:</label>
-                    <input type="text" id="empleado" placeholder="Nombre y Apellido" required autocomplete="off">
-                </div>
-
-                <div class="form-group">
                     <label for="efectivo">Efectivo total en caja ($):</label>
-                    <input type="number" id="efectivo" placeholder="Monto total contado" min="0" step="any" required>
+                    <input type="number" id="efectivo" required placeholder="$0" min="0" step="any">
                 </div>
+                
+                <fieldset style="border-color: #ff9800;">
+                    <legend style="color: #f57c00;">Movimiento de Caja</legend>
+                    <div class="form-group">
+                        <label for="retiro">Retiro de Efectivo (Opcional):</label>
+                        <input type="number" id="retiro" placeholder="$0" value="0" min="0" step="any">
+                        <small style="color: #666; display: block; margin-top: 0.3rem;">Se descontará automáticamente del efectivo en caja.</small>
+                    </div>
+                    <div style="margin-top: 1rem; font-weight: bold; color: var(--primary-dark); font-size: 1.1rem; text-align: center;">
+                        Quedará en caja: <span id="previewSaldo">$0</span>
+                    </div>
+                </fieldset>
 
-                <div class="form-group">
-                    <label for="retiro">Monto a retirar ($):</label>
-                    <input type="number" id="retiro" placeholder="0 si no hay retiro" min="0" step="any" value="0">
-                </div>
-
-                <div class="preview-card">
-                    <span class="preview-label">Saldo final que queda en caja:</span>
-                    <span id="previewSaldo" class="preview-amount">$0</span>
-                </div>
-
-                <button type="submit" class="btn-primary">Guardar Cierre Diario</button>
+                <button type="submit" class="btn-primary">Guardar Cierre</button>
             </form>
         </section>
 
-        <!-- Pestaña 2: Reportes y Exportación -->
-        <section id="tab-reportes" class="tab-content">
-            <!-- Bloque de Autenticación por PIN -->
+        <!-- PESTAÑA DE REPORTES -->
+        <section id="reportes" class="tab-content">
+            
             <div id="pinAuthContainer" class="pin-card">
-                <h3>Acceso Restringido</h3>
-                <p>Ingresa el PIN de seguridad para visualizar y exportar los reportes:</p>
-                <div class="pin-inputs">
-                    <input type="password" id="inputPin" maxlength="8" placeholder="****">
-                    <button type="button" class="btn-secondary" onclick="verificarPin()">Ingresar</button>
+                <h2>🔒 Acceso Restringido</h2>
+                <p>Ingresa el PIN de 4 dígitos para ver los reportes:</p>
+                <div class="form-group">
+                    <input type="password" id="inputPin" maxlength="4" placeholder="••••" inputmode="numeric" style="text-align:center; font-size:1.8rem; letter-spacing:0.5rem;">
                 </div>
-                <div id="pinMsg" class="pin-msg"></div>
+                <button type="button" class="btn-primary" onclick="verificarPin()">Verificar PIN</button>
+                <p id="pinMsg" class="pin-msg"></p>
             </div>
 
-            <!-- Contenido protegido de Reportes -->
             <div id="contenidoReportes" style="display: none;">
-                <div class="reportes-toolbar">
-                    <div class="filtros-grid">
-                        <div class="filtro-item">
-                            <label for="filtro-desde">Desde:</label>
-                            <input type="date" id="filtro-desde" onchange="filtrarYMostrarCierres()">
-                        </div>
-                        <div class="filtro-item">
-                            <label for="filtro-hasta">Hasta:</label>
-                            <input type="date" id="filtro-hasta" onchange="filtrarYMostrarCierres()">
-                        </div>
-                        <div class="filtro-item">
-                            <label for="filtro-sucursal">Sucursal:</label>
-                            <select id="filtro-sucursal" onchange="filtrarYMostrarCierres()">
-                                <option value="Todas">Todas</option>
-                                <option value="Santa Barbara">Santa Bárbara</option>
-                                <option value="Ralco">Ralco</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <button type="button" class="btn-excel" onclick="exportarExcel()">
-                        📊 Descargar Reporte Excel
-                    </button>
+                <div class="sub-tabs">
+                    <button type="button" class="sub-tab-btn active" onclick="cambiarSucursalReporte('Santa Barbara', this)">Santa Barbara</button>
+                    <button type="button" class="sub-tab-btn" onclick="cambiarSucursalReporte('Ralco', this)">Ralco</button>
                 </div>
 
-                <!-- Tabla de Historial -->
-                <div class="table-responsive">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Sucursal</th>
-                                <th>Empleado</th>
-                                <th>Efectivo en Caja</th>
-                                <th>Retiro</th>
-                                <th>Queda en Caja</th>
-                            </tr>
-                        </thead>
-                        <tbody id="cuerpoTablaCierres">
-                            <!-- Filas inyectadas dinámicamente con JavaScript -->
-                        </tbody>
-                    </table>
+                <h2 id="titulo-reporte-sucursal" style="font-size: 1.2rem;">Resumen - Santa Barbara</h2>
+                
+                <div class="dashboard">
+                    <div class="card full-width">
+                        <h3>Efectivo Declarado (Mes)</h3>
+                        <p id="res-mes" style="color: #1976d2;">$0</p>
+                    </div>
+                    <div class="card">
+                        <h3>Efectivo Declarado (Hoy)</h3>
+                        <p id="res-dia">$0</p>
+                    </div>
+                    <div class="card">
+                        <h3>Retiros (Hoy)</h3>
+                        <p id="res-ret" style="color: #f57c00;">$0</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h2>Generar Reporte Excel</h2>
+                <div class="export-filters">
+                    <div class="form-group">
+                        <label>Desde:</label>
+                        <input type="date" id="filtro-desde">
+                    </div>
+                    <div class="form-group">
+                        <label>Hasta:</label>
+                        <input type="date" id="filtro-hasta">
+                    </div>
+                    <div class="form-group">
+                        <label>Sucursal:</label>
+                        <select id="filtro-sucursal">
+                            <option value="Todas">Ambas Sucursales</option>
+                            <option value="Santa Barbara">Santa Barbara</option>
+                            <option value="Ralco">Ralco</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Empleado:</label>
+                        <select id="filtro-empleado">
+                            <option value="Todos">Todos los usuarios</option>
+                            <option value="Rosa Pinaleo">Rosa Piñaleo</option>
+                            <option value="Daniel Suarez">Daniel Suarez</option>
+                            <option value="Molka Poblete">Molka Poblete</option>
+                            <option value="Administracion">Administracion</option>
+                        </select>
+                    </div>
+
+                    <button type="button" onclick="exportarExcel()" class="btn-excel">📥 Descargar Excel</button>
                 </div>
             </div>
         </section>
-    </div>
+    </main>
 
     <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .catch(err => console.error("SW Error:", err));
+            });
+        }
+    </script>
 </body>
 </html>
