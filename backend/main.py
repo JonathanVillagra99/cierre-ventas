@@ -1,6 +1,6 @@
 import os
 import certifi
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -9,12 +9,14 @@ from dotenv import load_dotenv
 load_dotenv()
 MONGO_DETAILS = os.getenv("MONGO_URI")
 
+# Conexión a MongoDB Atlas
 client = AsyncIOMotorClient(MONGO_DETAILS, tlsCAFile=certifi.where())
 database = client.sistema_cierres
 coleccion_cierres = database.get_collection("cierres")
 
 app = FastAPI(title="API Cierre Diario de Caja")
 
+# Configuración CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -23,6 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Modelo de datos simplificado
 class CierreDiario(BaseModel):
     id: int
     fecha: str
@@ -35,7 +38,8 @@ class CierreDiario(BaseModel):
 @app.get("/cierres")
 async def obtener_cierres():
     cierres = []
-    cursor = coleccion_cierres.find({}).sort("id", -1)
+    # Ordena del más reciente al más antiguo
+    cursor = coleccion_cierres.find({}).sort("id", -1) 
     async for documento in cursor:
         documento["_id"] = str(documento["_id"])
         cierres.append(documento)
@@ -43,7 +47,7 @@ async def obtener_cierres():
 
 @app.post("/cierres")
 async def registrar_cierre(cierre: CierreDiario):
-    # Verificación de integridad: el saldo final siempre es efectivo - retiro
+    # Validamos que el saldo final siempre sea la resta exacta
     cierre.saldo_final = cierre.efectivo_en_caja - cierre.retiro
     cierre_dict = cierre.model_dump() if hasattr(cierre, "model_dump") else cierre.dict()
     
