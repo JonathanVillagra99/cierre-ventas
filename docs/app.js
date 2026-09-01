@@ -1,5 +1,5 @@
 // URL de tu backend en producción (Render)
-const API_URL = "https://tu-servicio-en-render.onrender.com"; // ¡Recuerda cambiar esto por tu URL real!
+const API_URL = "https://api-cierre-ventas.onrender.com"; // ¡Recuerda cambiar esto por tu URL real!
 
 // Configuración de Seguridad (PIN)
 const PIN_CORRECTO = "1234";
